@@ -1,0 +1,235 @@
+#SUPERMARKET BILLING SYSTEM
+
+
+#include<iostream.h>
+#include<stdio.h>
+#include<iomanip.h>
+#include<process.h>
+#include<ctype.h>
+#include<string.h>
+#include<conio.h>
+#include<fstream.h>
+
+class Product
+{
+	int pcode;
+	char pname[25];
+	float rate;
+
+	public:
+		void enter_details();
+		void modify_details();
+		void make_bill();
+		void delet_details();
+		void show_details();
+		int chk_no(int x);
+	};
+
+	Product P;
+	void Product::enter_details()
+		{
+		int chk;
+		clrscr();
+		cout<<"enter product code:\n";
+	   abc: cin>>chk;
+		int f=chk_no(chk);
+		if(f==1)
+			{
+			cout<<"product with code"<<chk<<"already";
+			cout<<"exists"<<endl;
+			cout<<"\n\n enter another product code"<<endl;
+			goto abc;
+			}
+		fstream fin;
+		fin.open("PRODUCT.DAT",ios::binary|ios::app);
+		pcode=chk;
+		fflush(stdin);
+		cout<<"\n enter product name";
+		gets(pname);
+		cout<<"enter rate";
+		cin>>rate;
+		fin.write((char*)&P,sizeof(P));
+		fflush(stdin);
+		fin.close();
+	int Product::chk_no(int x)
+		{
+		fstream f1;
+		f1.open("PRODUCT.DAT",ios::binary|ios::in);
+		f1.seekg(0);
+		while(f1.read((char*)&P,sizeof(P)))
+			if(pcode==x)
+				{
+				f1.close();
+				return 1;
+				}
+		f1.close();
+		return 0;
+	}
+
+	void Product::show_details()
+	{
+	fstream fin;
+	fin.open("PRODUCT.DAT",ios::binary|ios::in);
+	clrscr();
+	fin.seekg(0);
+	int f=0;
+	while(fin.read((char*)&P,sizeof(P)))
+	{
+		f=1;
+		cout<<"product code is:"<<pcode<<endl;
+		cout<<"product name is:"<<pname<<endl;
+		cout<< "rate is:"<<rate<<endl;
+	}
+	if(f==0)
+	cout<<"no product detail found";
+	getch();
+	fin.close();
+	}
+	void Product::make_bill()
+	{
+	int sum=0;
+	int qty=1;
+	int cost;
+	int p=0;
+	clrscr();
+	cout<<"-------------****SUPERMARTS PVT.LTD****----------------\n";
+	cout<<"-------------INDORE----------";
+	cout<<"Product code\t"<<"Product name\t"<<"quantity \t";
+	cout<<"\n";
+	fstream f1;
+	f1.open("PRODUCT.DAT",ios::binary|ios::in);
+	while(f1.read((char*)&P,sizeof(P))
+		{
+		p=1;
+		cout<<pcode<<"\t";
+		cout<<pname<<"\t";
+		cin>>qty;
+		cout<<"\t";     //from user
+		cout<<rate<<"\t";
+		cout<<rate*qty;
+		cout<<cost;
+		cout<<"\n";
+		}
+	cout<<"\t\t\t Total cost="<<sum;
+	if(p==0)
+		cout<<"no detail found";
+	f1.close();
+	}
+	void Product::modify_details()
+	{
+	fstream fin;
+	int RecNo,f=0;
+	long pos;
+	clrscr();
+	fin.open("PRODUCT.DAT",ios::binary|ios::out|ios::in);
+	fin.seekg(0);
+	cout<<"enter material code to be modified";
+	cin<<Recno;
+	while(fin.read((char*)&P,sizeof(P)))
+		{
+		if(Recno==P.pcode)
+			{
+			f=1;
+			int top;
+			cout<<"Product code is"<<pcode<<endl;
+			cout<<"Product name is"<<pname<<endl;
+			cout<<"Rate is"<<rate<<endl;
+			cout<<"what do you want to modify\n";
+			cout<<"1.Pcode\n"<<"2.Name\n"<<"3.Rate\n";
+			cout<<"enter your option";
+			cin>>op;
+			switch(op)
+			{
+				case1:cout<<"enter new Product code:";
+				      cin>>pcode;
+				break;
+				case2:cout<<"\nenter new Product name";
+				      gets(pname);
+				break;
+				case3:cout<<"\nenter new rate";
+				cin>>rate;
+				break;
+				default:cout<<"\nInvalid option";
+			}
+			pos=fin.tellg()-sizeof(P);
+			fin.seekg(pos);
+			fin.write((char*)&P,sizeof(P));
+			cout<<"\n Record modified\n";
+			cout<<"Press any key to continue";
+			}
+		}
+		if(f=0)
+		cout<<"Record not found";
+		getch();
+		fin.close();
+		}
+	void Product::delet_details()
+	{
+		fstream fin,fout;
+		int RecNo,f=0;
+		char ch;
+		clrscr();
+		fin.open("PRODUCT.DAT",ios::binary|ios::in)
+		fout.open("TEMP.DAT",ios::binary|ios::out)
+		fin.seekg(0);
+		cout<<"enter the product code to be deleted":
+		cin>>RecNO;
+		while(fin.read((char*)&P,sizeof(P));
+		{
+			if(RecNo!= Material code)
+			fout.write((char*)&P,sizeof(P));
+			else f=1;
+		}
+		if(f==0)
+		cout<<"Product not found";
+		else
+		{
+		cout<<"Product deleted":
+		remove("PRODUCT.DAT");
+		rename("TEMP.DAT","PRODUCT.DAT");
+		}
+	getch();
+	fin.close();
+	fout.close();
+	}
+	void main()
+	{
+		int op;
+		do
+		{
+			clrscr();
+			gotoxy(30,3);
+			cout<<"--------------Supermarket management and billing system------------------";
+			gotoxy(30,4);
+			cout<"===========================================================================";
+			gotoxy(20,8);
+			cout<<"1.enter details";
+			gotoxy(20,10);
+			cout<<"2.show details";
+			gotoxy(20,12);
+			cout<<"3.Modify details";
+			gotoxy(20,14);
+			cout<<"4.Delete details";
+			gotoxy(20,16);
+			cout<<"5.makebill";
+			gotoxy(20,18);
+			cout<<"7.Exit";
+			gotoxy(20,20);
+			cout<<"enter your option";
+			cin>>op;
+
+		switch(op)
+		{
+			case1:enterdetails();
+			break;
+			case2:showdetails();
+			break;
+			case3:Modifydetails();
+			break;
+			case4:deletedetails();
+			break;
+		}
+	}
+	while(op<7&&op>0);
+getch();
+}
